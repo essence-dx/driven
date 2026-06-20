@@ -1,3 +1,4 @@
+#![allow(warnings)]
 //! # Driven
 //!
 //! Professional AI-assisted development orchestrator with binary-first architecture.
