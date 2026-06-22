@@ -22,6 +22,15 @@ jobs:
             Invoke-WebRequest -Uri "https://win.rustup.rs/x86_64" -OutFile "rustup-init.exe"
             .\rustup-init.exe -y --default-toolchain 1.94.0 --profile minimal
       - run:
+          name: Clone local path dependencies
+          shell: powershell.exe
+          command: |
+            $ErrorActionPreference = "Stop"
+            $env:CIRCLECI_GH_TOKEN = [System.Environment]::GetEnvironmentVariable("CIRCLECI_GH_TOKEN")
+            $org = $env:CIRCLE_PROJECT_USERNAME
+            git clone "https://x-access-token:$env:CIRCLECI_GH_TOKEN@github.com/$org/dcp" "$env:USERPROFILE\dcp"
+            git clone "https://x-access-token:$env:CIRCLECI_GH_TOKEN@github.com/$org/serializer" "$env:USERPROFILE\serializer"
+      - run:
           name: Build Windows release artifacts
           shell: powershell.exe
           command: |
@@ -32,6 +41,7 @@ jobs:
             git config --global url."https://x-access-token:$env:CIRCLECI_GH_TOKEN@github.com/".insteadOf "ssh://git@github.com/"
             $env:CARGO_NET_GIT_FETCH_WITH_CLI = "true"
             cargo build --release
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
             New-Item -ItemType Directory -Path dist -Force | Out-Null
             
             if (Test-Path "target\release\driven.exe") {
