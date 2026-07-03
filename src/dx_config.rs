@@ -7,6 +7,7 @@ pub struct DrivenDxConfig {
     pub cache_dir: PathBuf,
     pub sr_dir: PathBuf,
     pub receipts_dir: PathBuf,
+    global_cache_dir: PathBuf,
 }
 
 impl DrivenDxConfig {
@@ -26,6 +27,7 @@ impl DrivenDxConfig {
             cache_dir: cache,
             sr_dir: sr,
             receipts_dir: receipts,
+            global_cache_dir: config.paths.global_cache.clone(),
         }
     }
 
@@ -48,6 +50,26 @@ impl DrivenDxConfig {
         if let Some(parent) = path.parent() {
             std::fs::create_dir_all(parent)?;
         }
+        let mut buf: Vec<u8> = Vec::new();
+        for (key, value) in entries {
+            write!(buf, "{key}=")?;
+            Self::write_llm_value(&mut buf, value)?;
+            buf.push(b'\n');
+        }
+        let tmp = path.with_extension("sr.tmp");
+        std::fs::write(&tmp, &buf)?;
+        std::fs::rename(&tmp, path)?;
+        Ok(())
+    }
+
+    pub fn global_sr_dir(&self) -> PathBuf {
+        self.global_cache_dir.join("driven")
+    }
+
+    pub fn write_global_sr(&self, name: &str, entries: &[(&str, &str)]) -> std::io::Result<()> {
+        let dir = self.global_sr_dir();
+        std::fs::create_dir_all(&dir)?;
+        let path = dir.join(format!("{}.sr", name));
         let mut buf: Vec<u8> = Vec::new();
         for (key, value) in entries {
             write!(buf, "{key}=")?;

@@ -484,6 +484,10 @@ fn main() -> anyhow::Result<()> {
     tracing::info!(workspace_root = %dx.workspace_root.display(), "dx config loaded");
     std::fs::create_dir_all(&dx.sr_dir).ok();
     std::fs::create_dir_all(&dx.receipts_dir).ok();
+    let _ = dx.write_global_sr("startup", &[
+        ("workspace", &dx.workspace_root.display().to_string()),
+        ("timestamp", &std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map(|d| d.as_secs().to_string()).unwrap_or_default()),
+    ]);
 
     let cli = Cli::parse();
     let project_root = std::env::current_dir()?;
