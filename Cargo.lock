@@ -621,6 +621,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "dx-config"
+version = "0.1.0"
+dependencies = [
+ "dx-serializer 0.1.0",
+ "serde",
+ "thiserror 2.0.18",
+ "toml",
+]
+
+[[package]]
 name = "dx-dcp"
 version = "0.1.0"
 dependencies = [
@@ -654,6 +664,7 @@ dependencies = [
  "console 0.15.11",
  "criterion",
  "dialoguer",
+ "dx-config",
  "dx-dcp",
  "dx-markdown",
  "dx-serializer 0.1.0",

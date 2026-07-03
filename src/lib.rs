@@ -55,6 +55,7 @@
 // Note: Some fields are for API completeness and future use
 
 // Core modules
+pub mod dx_config;
 pub mod agents;
 pub mod config_validation;
 pub mod context;

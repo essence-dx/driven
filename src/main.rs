@@ -480,6 +480,11 @@ fn main() -> anyhow::Result<()> {
         )
         .init();
 
+    let dx = driven::dx_config::DrivenDxConfig::load();
+    tracing::info!(workspace_root = %dx.workspace_root.display(), "dx config loaded");
+    std::fs::create_dir_all(&dx.sr_dir).ok();
+    std::fs::create_dir_all(&dx.receipts_dir).ok();
+
     let cli = Cli::parse();
     let project_root = std::env::current_dir()?;
 

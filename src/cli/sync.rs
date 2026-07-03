@@ -37,6 +37,20 @@ impl SyncCommand {
             }
         }
 
+        // Write .sr for serializer daemon
+        let dx = crate::dx_config::DrivenDxConfig::load();
+        let _ = dx.write_sr("driven-sync", &[
+            ("tool", "driven"),
+            ("action", "sync"),
+            ("editors_synced", &report.synced_count().to_string()),
+            ("errors", &report.errors.len().to_string()),
+            ("success", &report.is_success().to_string()),
+        ]);
+
+        if let Some(status) = dx.read_status("driven-sync") {
+            tracing::debug!("driven driven-sync machine cache verified: {} entries", status.len());
+        }
+
         Ok(())
     }
 

@@ -49,6 +49,20 @@ impl AnalyzeCommand {
             }
         }
 
+        // Write .sr for serializer daemon
+        let dx = crate::dx_config::DrivenDxConfig::load();
+        let _ = dx.write_sr("driven-analyze", &[
+            ("tool", "driven"),
+            ("action", "analyze"),
+            ("languages", &result.languages.join(",")),
+            ("frameworks", &result.frameworks.join(",")),
+            ("files", &total_files.to_string()),
+        ]);
+
+        if let Some(status) = dx.read_status("driven-analyze") {
+            tracing::debug!("driven driven-analyze machine cache verified: {} entries", status.len());
+        }
+
         Ok(())
     }
 
