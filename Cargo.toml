@@ -67,7 +67,7 @@ toml = "0.8"
 # DX Ecosystem Integration
 dx-serializer = { path = "../serializer", version = "1.0.0" }
 dx-config = { path = "../serializer/crates/dx-config", features = ["machine"] }
-dx_markdown = { package = "dx-markdown", version = "1.0.0" }
+dx_markdown = { package = "dx-markdown", version = "0.1.0" }
 
 # DCP Integration
 dcp = { package = "dx-dcp", path = "../dcp", version = "1.0.0" }
